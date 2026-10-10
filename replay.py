@@ -2,6 +2,9 @@
 HTML viewers for Light Cycles, in the spirit of the CodinGame player.
 
   write_html(path, replay, cmds)               one game (referee.py --html)
+  write_report(path, games, name_a, name_b, sub) a whole tournament: summary,
+                                               one tile per game, click a tile
+                                               to watch that game
 
 The files are self-contained: no internet, no packages.
 """
@@ -259,3 +262,10 @@ def write_html(path, replay, cmds):
     _render(path, "Light Cycles", f"seed {replay['seed']} · {replay['w']}×{replay['h']}",
             _short(cmds[0]), _short(cmds[1]), [game])
 
+
+def write_report(path, games, name_a, name_b, sub):
+    """A tournament: `games` are the dicts returned by tournament.one()."""
+    packed = [_game(g["replay"], g["seed"], g["a_idx"],
+                    {"A": "A", "B": "B", "draw": "D"}[g["winner"]], list(g["reasons"]))
+              for g in games]
+    _render(path, f"{name_a} vs {name_b}", sub, name_a, name_b, packed)

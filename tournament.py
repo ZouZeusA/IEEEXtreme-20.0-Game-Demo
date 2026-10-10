@@ -9,6 +9,7 @@ Each seed builds a different board, so one seed works like one test case.
 Usage:
   python3 tournament.py bots/voronoi_bot.py bots/flood_bot.py --games 40
   python3 tournament.py A.py B.py --games 200 --offset 5000   # fresh seeds you never tuned on
+  python3 tournament.py A.py B.py --games 200 --html reports/a_vs_b.html   # watch every game
 """
 import argparse
 import os
@@ -54,6 +55,8 @@ def main():
     ap.add_argument("--workers", type=int, default=2)
     ap.add_argument("--offset", type=int, default=0,
                     help="first seed; use a new range to test on boards you did not tune on")
+    ap.add_argument("--html", metavar="FILE",
+                    help="write a report where you can click any game and watch it")
     args = ap.parse_args()
 
     jobs = [(args.bot_a, args.bot_b, s) for s in range(args.offset, args.offset + args.games)]
@@ -68,6 +71,12 @@ def main():
     print(f"A wins {tally['A']}, B wins {tally['B']}, draws {tally['draw']}  (n={n})")
     print(f"A score (win=1, draw=0.5): {score:.0%}")
     print(f"How A died: {dict(deaths_a) or 'never'}")
+
+    if args.html:
+        from replay import write_report
+        sub = f"{n} games · seeds {args.offset}–{args.offset + n - 1} · sides swapped every game"
+        write_report(args.html, games, name(args.bot_a), name(args.bot_b), sub)
+        print(f"Report written to {args.html}: open it and click any game to watch it.")
 
 
 if __name__ == "__main__":
