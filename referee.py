@@ -20,6 +20,7 @@ RULES
 
 Usage:
   python3 referee.py "python3 bots/flood_bot.py" "python3 bots/safe_bot.py" --seed 7 --show
+  python3 referee.py "python3 bots/flood_bot.py" "python3 bots/safe_bot.py" --seed 7 --html replay.html
 """
 import argparse
 import queue
@@ -177,10 +178,15 @@ def main():
     ap.add_argument("bot1")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--show", action="store_true", help="print the board every turn")
+    ap.add_argument("--html", metavar="FILE", help="write a CodinGame-style visual replay")
     args = ap.parse_args()
     r = play(args.bot0, args.bot1, seed=args.seed, show=args.show)
     who = {0: "bot0 (A) wins", 1: "bot1 (B) wins", -1: "draw"}[r["result"]]
     print(f"\n{who} after {r['turns']} turns. Death reasons: {r['reason']}")
+    if args.html:
+        from replay import write_html
+        write_html(args.html, r["replay"], [args.bot0, args.bot1])
+        print(f"Replay written to {args.html}: open it in a browser.")
 
 
 if __name__ == "__main__":
