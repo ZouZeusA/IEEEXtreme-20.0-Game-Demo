@@ -1,0 +1,7 @@
+[project]
+name = "ieeextreme-20-game-demo"
+version = "1.0.0"
+description = "Light Cycles: a CodinGame-style bot game, local referee, tournament reports and an AI workflow demo for IEEEXtreme 20.0 game tasks"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = []

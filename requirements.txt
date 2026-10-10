@@ -1,0 +1,2 @@
+# No third-party packages: everything uses the Python standard library (3.8+).
+# This file exists so `pip install -r requirements.txt` works in any setup.
